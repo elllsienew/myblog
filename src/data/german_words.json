@@ -1,0 +1,14 @@
+{
+  "A1": [
+    {"id": "a1-1", "word": "Hallo", "translation": "你好", "example": "Hallo, wie geht's?", "audio": ""},
+    {"id": "a1-2", "word": "Danke", "translation": "谢谢", "example": "Danke für deine Hilfe.", "audio": ""},
+    {"id": "a1-3", "word": "Bitte", "translation": "请/不客气", "example": "Bitte sehr!", "audio": ""}
+  ],
+  "A2": [
+    {"id": "a2-1", "word": "Entschuldigung", "translation": "对不起；打扰一下", "example": "Entschuldigung, wo ist die Toilette?", "audio": ""},
+    {"id": "a2-2", "word": "Gestern", "translation": "昨天", "example": "Gestern war ich im Kino.", "audio": ""}
+  ],
+  "B1": [
+    {"id": "b1-1", "word": "trotzdem", "translation": "尽管如此", "example": "Es regnet, trotzdem gehen wir spazieren.", "audio": ""}
+  ]
+}
