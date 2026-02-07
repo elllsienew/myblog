@@ -13,7 +13,7 @@ const wordsData = {
 export default function German() {
   const levels = Object.keys(wordsData || {});
   const [level, setLevel] = useState(levels[0] || "A1");
-  const [mode, setMode] = useState("play"); // 'play' or 'grid'
+  const [mode, setMode] = useState("grid"); // 'play' or 'grid'
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [wordStatus, setWordStatus] = useState(() => {
