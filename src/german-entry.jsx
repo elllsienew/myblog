@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter as Router, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import German from "./pages/German";
@@ -12,7 +11,7 @@ function checkAuth() {
 }
 
 // 路由守卫组件
-function ProtectedRoute({ children }) {
+export function ProtectedRoute({ children }) {
   const isAuth = checkAuth();
   
   if (!isAuth) {
@@ -23,7 +22,7 @@ function ProtectedRoute({ children }) {
 }
 
 // 导航栏组件
-function Navigation() {
+export function Navigation() {
   const location = useLocation();
   const isAuth = checkAuth();
   
@@ -56,7 +55,7 @@ function Navigation() {
   );
 }
 
-function GermanApp() {
+export function GermanApp() {
   return (
     <Router>
       <div className="min-h-screen bg-white text-gray-800">

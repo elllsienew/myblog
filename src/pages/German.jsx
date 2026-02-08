@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import A1Data from "../data/json/A1.json";
 import A2Data from "../data/json/A2.json";
 import B1Data from "../data/json/B1.json";
@@ -24,18 +24,10 @@ export default function German() {
     }
   });
   const [statusFilter, setStatusFilter] = useState("all"); // all | pending | known | unknown
-  const [marks, setMarks] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("german_marks") || "{}");
-    } catch {
-      return {};
-    }
-  });
-
   const timerRef = useRef(null);
   const list = wordsData[level] || [];
   const letterRefs = useRef({});
-  const [fixedNav, setFixedNav] = useState(() => {
+  const [fixedNav] = useState(() => {
     try {
       // default to true (fixed navigation shown) if no saved preference
       const raw = localStorage.getItem("german_fixed_nav");
@@ -48,7 +40,9 @@ export default function German() {
   useEffect(() => {
     try {
       localStorage.setItem("german_fixed_nav", JSON.stringify(!!fixedNav));
-    } catch {}
+    } catch {
+      // ignore storage errors (e.g., private mode)
+    }
   }, [fixedNav]);
 
   const [search, setSearch] = useState("");
@@ -153,14 +147,6 @@ export default function German() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
-  function toggleMark(id) {
-    const next = { ...(marks || {}) };
-    if (next[id]) delete next[id];
-    else next[id] = true;
-    setMarks(next);
-    localStorage.setItem("german_marks", JSON.stringify(next));
-  }
-
   function markWordStatus(word, status) {
     if (!word || !word.text) return;
     const key = `${level}_${word.text}`;
@@ -184,7 +170,7 @@ export default function German() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 p-10">
-      <motion.div
+      <Motion.div
         className="max-w-6xl mx-auto mb-8"
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -192,7 +178,7 @@ export default function German() {
       >
         <h1 className="text-4xl font-light text-gray-800 mb-2">德语学习</h1>
         <p className="text-gray-600">按级别选择词书，支持播放模式与平铺模式，支持标记生词（保存在 localStorage）</p>
-      </motion.div>
+      </Motion.div>
 
         <div className="max-w-6xl mx-auto mb-6 flex gap-4 flex-wrap items-center">
         <label className="text-sm text-gray-700">级别：</label>
@@ -216,13 +202,13 @@ export default function German() {
         <div className="ml-4">
           <button
             onClick={() => setMode("play")}
-            className={`px-3 py-1 rounded ${mode === "play" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-400"}`}
+            className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${mode === "play" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-400"}`}
           >
             播放模式
           </button>
           <button
             onClick={() => setMode("grid")}
-            className={`ml-2 px-3 py-1 rounded ${mode === "grid" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-400"}`}
+            className={`ml-2 h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${mode === "grid" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-400"}`}
           >
             平铺模式
           </button>
@@ -239,7 +225,7 @@ export default function German() {
             <button
               key={filter.value}
               onClick={() => { setStatusFilter(filter.value); setIndex(0); }}
-              className={`px-3 py-1 rounded text-sm ${statusFilter === filter.value ? "bg-green-600 text-white" : "bg-green-100 text-green-600"}`}
+              className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${statusFilter === filter.value ? "bg-green-600 text-white" : "bg-green-100 text-green-600"}`}
             >
               {filter.label}
             </button>
@@ -258,16 +244,16 @@ export default function German() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIndex((i) => (i > 0 ? i - 1 : list.length - 1))}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center justify-center"
                 >
                   上一条
                 </button>
-                <button onClick={togglePlay} className="px-4 py-2 bg-blue-600 text-white rounded">
+                <button onClick={togglePlay} className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap bg-blue-600 text-white rounded inline-flex items-center justify-center">
                   {playing ? "暂停" : "播放"}
                 </button>
                 <button
                   onClick={() => setIndex((i) => (i + 1 < list.length ? i + 1 : 0))}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center justify-center"
                 >
                   下一条
                 </button>
@@ -299,7 +285,7 @@ export default function German() {
                     <div className="flex flex-col items-end gap-2">
                       <button
                         onClick={() => markWordStatus(displayList[index], "known")}
-                        className={`px-3 py-1 rounded text-sm ${
+                        className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${
                           getWordStatus(displayList[index]) === "known" 
                             ? "bg-blue-500 text-white" 
                             : "bg-blue-100 text-blue-600 hover:bg-blue-200"
@@ -309,7 +295,7 @@ export default function German() {
                       </button>
                       <button
                         onClick={() => markWordStatus(displayList[index], "unknown")}
-                        className={`px-3 py-1 rounded text-sm ${
+                        className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${
                           getWordStatus(displayList[index]) === "unknown" 
                             ? "bg-yellow-500 text-white" 
                             : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
@@ -320,7 +306,7 @@ export default function German() {
                       {getWordStatus(displayList[index]) !== "pending" && (
                         <button
                           onClick={() => markWordStatus(displayList[index], "pending")}
-                          className="px-3 py-1 rounded text-sm bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded bg-gray-100 text-gray-600 hover:bg-gray-200 inline-flex items-center justify-center"
                         >
                           重置
                         </button>
@@ -337,8 +323,8 @@ export default function German() {
                             window.speechSynthesis.cancel();
                             window.speechSynthesis.speak(u);
                           });
-                        }}
-                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          }}
+                          className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center justify-center"
                       >
                         发音
                       </button>
@@ -429,7 +415,7 @@ export default function German() {
                             <div className="flex flex-col gap-2">
                               <button
                                 onClick={() => markWordStatus(it, "known")}
-                                className={`px-2 py-1 rounded text-xs ${
+                                className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${
                                   getWordStatus(it) === "known" 
                                     ? "bg-blue-500 text-white" 
                                     : "bg-blue-100 text-blue-600 hover:bg-blue-200"
@@ -439,7 +425,7 @@ export default function German() {
                               </button>
                               <button
                                 onClick={() => markWordStatus(it, "unknown")}
-                                className={`px-2 py-1 rounded text-xs ${
+                                className={`h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded inline-flex items-center justify-center ${
                                   getWordStatus(it) === "unknown" 
                                     ? "bg-yellow-500 text-white" 
                                     : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
@@ -450,7 +436,7 @@ export default function German() {
                               {getWordStatus(it) !== "pending" && (
                                 <button
                                   onClick={() => markWordStatus(it, "pending")}
-                                  className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                  className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap rounded bg-gray-100 text-gray-600 hover:bg-gray-200 inline-flex items-center justify-center"
                                 >
                                   重置
                                 </button>
@@ -467,7 +453,7 @@ export default function German() {
                                     window.speechSynthesis.speak(u);
                                   });
                                 }}
-                                className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                  className="h-8 min-w-[72px] px-2 text-xs whitespace-nowrap bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center justify-center"
                               >
                                 发音
                               </button>

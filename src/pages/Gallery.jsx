@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Gallery() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const _motion = motion;
 
   const groupedArtworks = {
     Watercolor: [
@@ -363,7 +364,6 @@ export default function Gallery() {
         title: "Emienm",
         description: "",
       },
-,
     ],
   };
 
